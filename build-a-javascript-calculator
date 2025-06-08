@@ -1,0 +1,183 @@
+** start of index.html **
+
+<div id="root"></div>
+
+** end of index.html **
+** start of styles.css **
+
+#calculator {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  max-width: 300px;
+  margin: 50px auto;
+  padding: 20px;
+  background: linear-gradient(
+    135deg,
+    violet,
+    indigo,
+    blue,
+    green,
+    yellow,
+    orange,
+    red
+  );
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+button {
+  padding: 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(
+    45deg,
+    red,
+    orange,
+    yellow,
+    green,
+    blue,
+    indigo,
+    violet
+  );
+  color: white;
+  cursor: pointer;
+  transition: transform 0.1s ease-in-out;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+#display {
+  grid-column: span 4;
+  background-color: #111;
+  color: #0f0;
+  padding: 20px;
+  font-size: 2rem;
+  text-align: right;
+  border-radius: 10px;
+  font-family: monospace;
+}
+
+** end of styles.css **
+** start of script.jxs **
+
+function App() {
+  const [input, setInput] = React.useState("0");
+
+  const handleNumber = (value) => {
+    if (input === "0") {
+      setInput(value);
+    } else {
+      setInput(input + value);
+    }
+  };
+
+  const handleOperator = (operator) => {
+    if (/[\+\-\*\/]$/.test(input)) {
+      // Replace last operator unless it's a minus after another operator
+      if (operator === "-" && !/[\-]$/.test(input)) {
+        setInput(input + operator);
+      } else {
+        setInput(input.slice(0, -1) + operator);
+      }
+    } else {
+      setInput(input + operator);
+    }
+  };
+
+  const handleDecimal = () => {
+    const parts = input.split(/[\+\-\*\/]/);
+    const last = parts[parts.length - 1];
+    if (!last.includes(".")) {
+      setInput(input + ".");
+    }
+  };
+
+  const handleClear = () => {
+    setInput("0");
+  };
+
+  const handleEqual = () => {
+    try {
+      const result = eval(input);
+      setInput(result.toString());
+    } catch (error) {
+      setInput("Error");
+    }
+  };
+
+  return (
+    <div id="calculator">
+      <div id="display">{input}</div>
+
+      <button id="clear" onClick={handleClear}>
+        AC
+      </button>
+      <button id="divide" onClick={() => handleOperator("/")}>
+        /
+      </button>
+      <button id="multiply" onClick={() => handleOperator("*")}>
+        *
+      </button>
+      <button id="subtract" onClick={() => handleOperator("-")}>
+        -
+      </button>
+
+      <button id="seven" onClick={() => handleNumber("7")}>
+        7
+      </button>
+      <button id="eight" onClick={() => handleNumber("8")}>
+        8
+      </button>
+      <button id="nine" onClick={() => handleNumber("9")}>
+        9
+      </button>
+      <button id="add" onClick={() => handleOperator("+")}>
+        +
+      </button>
+
+      <button id="four" onClick={() => handleNumber("4")}>
+        4
+      </button>
+      <button id="five" onClick={() => handleNumber("5")}>
+        5
+      </button>
+      <button id="six" onClick={() => handleNumber("6")}>
+        6
+      </button>
+      <div></div>
+
+      <button id="one" onClick={() => handleNumber("1")}>
+        1
+      </button>
+      <button id="two" onClick={() => handleNumber("2")}>
+        2
+      </button>
+      <button id="three" onClick={() => handleNumber("3")}>
+        3
+      </button>
+      <button id="equals" onClick={handleEqual}>
+        =
+      </button>
+
+      <button
+        id="zero"
+        style={{ gridColumn: "span 2" }}
+        onClick={() => handleNumber("0")}
+      >
+        0
+      </button>
+      <button id="decimal" onClick={handleDecimal}>
+        .
+      </button>
+    </div>
+  );
+}
+
+ReactDOM.render(<App />, document.getElementById("root"));
+
+** end of script.jxs **
